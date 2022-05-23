@@ -1,7 +1,11 @@
 #!/bin/bash
+# sh curl-scripts/auth/sign-in.sh
 
 API="http://localhost:4741"
 URL_PATH="/sign-in"
+
+EMAIL="Test@gmail.com"
+PASSWORD="1234"
 
 curl "${API}${URL_PATH}" \
   --include \

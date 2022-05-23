@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  goods: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thing' }],
+  bads: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thing' }],
   token: String
 }, {
   timestamps: true,
