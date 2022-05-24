@@ -6,8 +6,8 @@ const thingSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    likers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-    dislikers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    gooders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    baders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
   {
     timestamps: true

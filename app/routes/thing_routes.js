@@ -4,7 +4,7 @@ const express = require('express')
 const passport = require('passport')
 
 // pull in Mongoose model for examples
-const Thing = require('../models/thing.js')
+const Thing = require('../models/thing')
 
 // Most of the thing routes are going to be useless in version one because users are not going to be able to create, index, or delete things. They can only update them (with likes), and show them by swiping.
 
@@ -16,7 +16,7 @@ const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
 // we'll use this function to send 401 when a user tries to modify a resource
 // that's owned by someone else
-const requireOwnership = customErrors.requireOwnership
+// const requireOwnership = customErrors.requireOwnership
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { example: { title: '', text: 'foo' } } -> { example: { text: 'foo' } }
@@ -32,17 +32,16 @@ const router = express.Router()
 // INDEX
 // GET /examples
 router.get('/things', requireToken, (req, res, next) => {
-  // Probably want to do: Restaurant.find({ owner: req.user.id })
-  Thing.find()
-    .then((things) => {
+  Thing.find({})
+    .then(thing => {
       // `examples` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
-      return things.map((things) => things.toObject())
+      return thing.map(thing => thing.toObject())
     })
-  // respond with status 200 and JSON of the examples
-    .then((things) => res.status(200).json({ things: things }))
-  // if an error occurs, pass it to the handler
+    // respond with status 200 and JSON of the examples
+    .then(thing => res.status(200).json({ things: thing }))
+    // if an error occurs, pass it to the handler
     .catch(next)
 })
 
@@ -60,23 +59,6 @@ router.get('/things/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// CREATE
-// POST
-router.post('/things', requireToken, (req, res, next) => {
-  // set owner of new example to be current user
-  req.body.restaurant.owner = req.user.id
-
-  Thing.create(req.body.restaurant)
-  // respond to successful `create` with status 201 and JSON of new "example"
-    .then((thing) => {
-      res.status(201).json({ thing: thing.toObject() })
-    })
-  // if an error occurs, pass it off to our error handler
-  // the error handler needs the error message and the `res` object so that it
-  // can send an error message back to the client
-    .catch(next)
-})
-
 // UPDATE
 // PATCH /examples/5a7db6c74d55bc51bdf39793
 router.patch(
@@ -91,13 +73,11 @@ router.patch(
     Thing.findById(req.params.id)
       .then(handle404)
       .then((thing) => {
-        // pass the `req` object and the Mongoose record to `requireOwnership`
-        // it will throw an error if the current user isn't the owner
-        // I'm commenting out requireOwnership because users will update things that they did not create for the most part
-        // requireOwnership(req, thing)
-
-        // pass the result of Mongoose's `.update` to the next `.then`
-        thing.set(req.body.restaurant)
+        if (req.body.data.vote === 'left') {
+          thing.baders.push(req.user.id)
+        } else if (req.body.data.vote === 'right') {
+          thing.gooders.push(req.user.id)
+        }
         return thing.save()
       })
     // if that succeeded, return 204 and no JSON
@@ -106,22 +86,5 @@ router.patch(
       .catch(next)
   }
 )
-
-// DESTROY
-// DELETE /examples/5a7db6c74d55bc51bdf39793
-router.delete('/things/:id', requireToken, (req, res, next) => {
-  Thing.findById(req.params.id)
-    .then(handle404)
-    .then((thing) => {
-      // throw an error if current user doesn't own `example`
-      requireOwnership(req, thing)
-      // delete the example ONLY IF the above didn't throw
-      thing.deleteOne()
-    })
-  // send back 204 and no content if the deletion succeeded
-    .then(() => res.sendStatus(204))
-  // if an error occurs, pass it to the handler
-    .catch(next)
-})
 
 module.exports = router

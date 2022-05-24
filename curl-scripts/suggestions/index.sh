@@ -3,7 +3,7 @@
 
 API="http://localhost:4741"
 URL_PATH="/suggestions"
-TOKEN="6db15697e2f44eed0a3dbbfc5fc7fa3c"
+TOKEN="189ec0968f72ca8b0f7b3c1c840fd9a5"
 
 curl "${API}${URL_PATH}" \
   --include \
