@@ -12,6 +12,8 @@ const bcryptSaltRounds = 10
 // pull in error types and the logic to handle them and set status codes
 const errors = require('../../lib/custom_errors')
 
+const handle404 = errors.handle404
+
 const BadParamsError = errors.BadParamsError
 const BadCredentialsError = errors.BadCredentialsError
 
@@ -137,5 +139,28 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .then(() => res.sendStatus(204))
     .catch(next)
 })
+
+// UPDATE
+// PATCH /examples/5a7db6c74d55bc51bdf39793
+router.patch(
+  '/users/',
+  requireToken,
+  (req, res, next) => {
+    User.findById(req.user.id)
+      .then(handle404)
+      .then((user) => {
+        if (req.body.vote === 'left') {
+          user.bads.push(req.body.id)
+        } else if (req.body.vote === 'right') {
+          user.goods.push(req.body.id)
+        }
+        return user.save()
+      })
+    // if that succeeded, return 204 and no JSON
+      .then(() => res.sendStatus(204))
+    // if an error occurs, pass it to the handler
+      .catch(next)
+  }
+)
 
 module.exports = router
