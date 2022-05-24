@@ -3,7 +3,7 @@
 
 API="http://localhost:4741"
 URL_PATH="/things"
-TOKEN="189ec0968f72ca8b0f7b3c1c840fd9a5"
+TOKEN="8c2e641633015037aabd6ad232edf552"
 
 curl "${API}${URL_PATH}" \
   --include \

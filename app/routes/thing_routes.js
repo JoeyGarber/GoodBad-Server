@@ -66,16 +66,12 @@ router.patch(
   requireToken,
   removeBlanks,
   (req, res, next) => {
-    // if the client attempts to change the `owner` property by including a new
-    // owner, prevent that by deleting that key/value pair
-    delete req.body.restaurant.owner
-
     Thing.findById(req.params.id)
       .then(handle404)
       .then((thing) => {
-        if (req.body.data.vote === 'left') {
+        if (req.body.vote === 'left') {
           thing.baders.push(req.user.id)
-        } else if (req.body.data.vote === 'right') {
+        } else if (req.body.vote === 'right') {
           thing.gooders.push(req.user.id)
         }
         return thing.save()
