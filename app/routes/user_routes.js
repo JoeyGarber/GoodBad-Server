@@ -163,7 +163,7 @@ router.patch(
   }
 )
 
-// GET MY LIKES AND DISLIKES
+// GET user with populated likes and dislikes
 // GET /examples
 router.get('/user/things', requireToken, (req, res, next) => {
   User.findById(req.user.id)
