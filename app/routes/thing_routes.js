@@ -50,6 +50,8 @@ router.get('/things', requireToken, (req, res, next) => {
 router.get('/things/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Thing.findById(req.params.id)
+    .populate('gooders')
+    .populate('baders')
     .then(handle404)
   // if `findById` is successful, respond with 200 and "example" JSON
     .then((thing) =>
