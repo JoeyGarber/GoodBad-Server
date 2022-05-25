@@ -140,8 +140,8 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// UPDATE
-// PATCH /examples/5a7db6c74d55bc51bdf39793
+// Vote
+// PATCH
 router.patch(
   '/users/',
   requireToken,
@@ -162,5 +162,18 @@ router.patch(
       .catch(next)
   }
 )
+
+// GET MY LIKES AND DISLIKES
+// GET /examples
+router.get('/user/things', requireToken, (req, res, next) => {
+  User.findById(req.user.id)
+    .populate('goods')
+    .populate('bads')
+    .then(handle404)
+  // if `findById` is successful, respond with 200 and "example" JSON
+    .then((user) => res.status(200).json({ user: user.toObject() }))
+  // if an error occurs, pass it to the handler
+    .catch(next)
+})
 
 module.exports = router

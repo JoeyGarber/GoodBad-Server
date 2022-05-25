@@ -59,7 +59,7 @@ router.get('/things/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// UPDATE
+// Vote
 // PATCH /examples/5a7db6c74d55bc51bdf39793
 router.patch(
   '/things/:id',
