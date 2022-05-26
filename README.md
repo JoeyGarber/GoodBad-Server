@@ -5,7 +5,7 @@ This application allows users to create an account, decide whether various thing
 ## Important Links
 
 - [Deployed Client]
-- [Client Repo]
+- [Client Repo](https://github.com/JoeyGarber/GoodBad-Client)
 - [Deployed API]
 
 ## Installation instructions
