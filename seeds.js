@@ -155,9 +155,6 @@ const seedThings = [
     title: 'Jazz'
   },
   {
-    title: 'Jizz (Star Wars music genre)'
-  },
-  {
     title: 'Modern Farmhouse Decor'
   },
   {
